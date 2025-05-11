@@ -4,8 +4,9 @@ Welcome to the AI-Assisted Framework, designed to bring structured, standards-ba
 
 ## Overview
 
-This framework provides a set of foundational documents and a configuration structure (`CLAUDE.md`) that, when used with the `claude` CLI, initializes your Claude Code session with:
+This framework provides a set of foundational documents and a configuration structure (`CLAUDE.md`) that, when used with the `claude` CLI, initializes your Claude Code session with the necessary context. A `start.sh` script is provided to launch the `claude` CLI with the correct initial behavioral prompt.
 
+The framework includes:
 *   **`Catalyst` Persona:** An AI assistant embodying an experienced IT Architect, Project Manager, and visionary AI strategist. `Catalyst` guides project planning, RFI (Request for Implementation) generation, and oversees `Forge`.
 *   **`Forge` Persona:** An AI assistant embodying an expert-level Software Engineer and System Operator. `Forge` translates RFIs into code, performs system operations (with strict safety protocols), and manages testing and documentation at the implementation level.
 *   **The AI-Assisted Dev Bible:** A comprehensive standardization framework governing all aspects of development, including security (ICERC protocol for system commands), testing, documentation, version control, and ethical AI usage.
@@ -17,10 +18,11 @@ The goal is to enhance productivity, ensure quality and security, and foster eff
 
 1.  **Claude Code CLI (`claude`):**
     *   You **must** have the `claude` command-line interface tool, provided by Anthropic, installed and authenticated on your system. This framework relies entirely on the `claude` CLI for interaction with the Claude Code API.
-    *   For installation and authentication instructions, please refer to the **official Anthropic Claude Code documentation**.
-    *   [https://docs.anthropic.com/en/docs/claude-code/getting-started]
+    *   For installation and authentication instructions, please refer to the **official Anthropic Claude Code documentation**: [https://docs.anthropic.com/en/docs/claude-code/getting-started](https://docs.anthropic.com/en/docs/claude-code/getting-started)
 2.  **Git:**
     *   You must have `git` installed to clone this repository.
+3.  **Bash-compatible Shell:**
+    *   You need a Bash-compatible shell environment to run the `start.sh` script (common on Linux and macOS; Windows users might use WSL or Git Bash).
 
 ## Quick Start & Setup
 
@@ -34,12 +36,19 @@ The goal is to enhance productivity, ensure quality and security, and foster eff
     cd ai_assisted_framework_claude
     ```
 
-2.  **Verify Foundational Documents (Optional but Recommended):**
+2.  **Make `start.sh` Executable:**
+    In the root of the cloned `ai_assisted_framework_claude` directory, make the `start.sh` script executable:
+    ```bash
+    chmod +x start.sh
+    ```
+
+3.  **Verify Foundational Documents (Optional but Recommended):**
     Ensure the following directory structure and key files are present:
     ```
     ai_assisted_framework_claude/
-    ├── CLAUDE.md                 # Primary Claude Code memory file
+    ├── CLAUDE.md                 # Primary Claude Code memory file (loads context)
     ├── README.md                 # This file
+    ├── start.sh                  # Script to launch the framework
     ├── personas/
     │   ├── catalyst_persona.md
     │   └── forge_persona.md
@@ -47,23 +56,26 @@ The goal is to enhance productivity, ensure quality and security, and foster eff
     │   └── ai_assisted_dev_bible.md
     └── workflows/
         └── maia_workflow.md
+    └── design/                     # Contains design documents (also loaded by CLAUDE.md)
+        ├── 01_User_Session_Initialization_MAIA_Workflow.md
+        ├── ... (other design files)
     ```
-    The `CLAUDE.md` file in the root is configured to import these documents.
+    The `CLAUDE.md` file in the root is configured to import these documents into Claude's context.
 
-3.  **Run the Framework:**
-    Ensure you are in the root directory of the cloned `ai_assisted_framework_claude` repository. Then, simply run:
+4.  **Run the Framework:**
+    Ensure you are in the root directory of the cloned `ai_assisted_framework_claude` repository. Then, run:
     ```bash
-    claude
+    ./start.sh
     ```
-    (Or `c` if you have an alias configured for the `claude` CLI).
 
 ## What to Expect on First Run
 
-Upon running `claude` from the framework's root directory:
+Upon running `./start.sh`:
 
-1.  The `claude` CLI will automatically load the `CLAUDE.md` file and, through its `@import` statements, load all foundational documents (personas, Dev Bible, MAIA-WF) into Claude's context.
-2.  Claude will embody the `(Catalyst)` persona as per the initial instruction in `CLAUDE.md`.
-3.  `(Catalyst)` will greet you and initiate the "User Session Initialization" MAIA-Workflow. This involves:
+1.  The `start.sh` script will launch the `claude` CLI.
+2.  The `claude` CLI will automatically load the `CLAUDE.md` file and, through its `@import` statements, load all foundational and design documents into Claude's context.
+3.  The `start.sh` script will pass a specific initial prompt to `claude`, instructing it to embody the `(Catalyst)` persona.
+4.  `(Catalyst)` will greet you and initiate the "User Session Initialization" MAIA-Workflow. This involves:
     *   Welcoming you and explaining the operational context.
     *   Asking you to provide an **absolute path to a project directory**. This directory will be where all your project-specific work, artifacts, and session state (`maia_project_state.json`) will be stored.
     *   `Catalyst` will then guide `Forge` (with your confirmations via ICERC pre-briefs and Claude Code's native permission prompts) to verify or create this directory and set it as the current working environment.
